@@ -101,5 +101,5 @@ def generate_website_package(payload: Dict[str, Any]) -> Dict[str, Any]:
         ],
         "images_needed": images_needed,
         "voice_scripts_needed": voices_needed,
-        "callback_url_for_assets": " https://dns-era-term-motion.trycloudflare.com"
+        "callback_url_for_assets": "https://explanation-cigarette-worldwide-supreme.trycloudflare.com "
     }
