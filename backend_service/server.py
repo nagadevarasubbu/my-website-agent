@@ -24,12 +24,16 @@ def write_page(filename: str, html_content: str):
     (SITE_DIR / filename).write_text(html_content, encoding="utf-8")
 
 def download(url: str, out_path: Path):
-    r = requests.get(url, stream=True)
-    if r.status_code == 200:
-        with open(out_path, "wb") as f:
-            f.write(r.content)
-    else:
-        print(f"[WARN] Failed to download: {url}")
+    try:
+        r = requests.get(url, stream=True, timeout=10)
+        if r.status_code == 200:
+            with open(out_path, "wb") as f:
+                f.write(r.content)
+            print(f"✅ Downloaded: {url}")
+        else:
+            print(f"[WARN] Failed to download {url}: HTTP {r.status_code}")
+    except Exception as e:
+        print(f"[ERROR] Download failed {url}: {e}")
 
 @app.post("/bootstrap")
 async def bootstrap(request: Request):
@@ -38,14 +42,17 @@ async def bootstrap(request: Request):
     pages = data["pages"]
     images_needed = data["images_needed"]
     voices_needed = data["voice_scripts_needed"]
+    callback = data.get("callback_url_for_assets")  # ✅ FIXED
 
+    # ✅ Save HTML pages
     for page in pages:
         write_page(page["filename"], page["html_file"])
 
     return {
-        "status": "site initialized",
+        "status": "site initialized ✅",
         "images_needed": images_needed,
-        "voice_scripts_needed": voices_needed
+        "voice_scripts_needed": voices_needed,
+        "callback_url_for_assets": callback   # ✅ RETURN IT
     }
 
 @app.post("/submit-assets")
@@ -55,21 +62,20 @@ async def submit_assets(request: Request):
     IMG_DIR.mkdir(parents=True, exist_ok=True)
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 
+    # ✅ Save images
     for img in data.get("images", []):
         download(img["file_url"], IMG_DIR / f"{img['id']}.png")
 
+    # ✅ Save audio
     for v in data.get("voices", []):
         download(v["file_url"], AUDIO_DIR / f"audio_{v['id']}.mp3")
 
+    # ✅ Update HTML placeholders
     for html_file in SITE_DIR.glob("*.html"):
         content = html_file.read_text()
 
-        content = content.replace(
-            "<!-- IMAGE_PLACEHOLDER:hero -->",
-            "<div class='hero-bg' style=\"background-image:url('assets/images/hero.png');\"></div>"
-        )
-
-        for section in ["departments", "doctors", "contact", "menu", "chefs"]:
+        # Replace image placeholders dynamically
+        for section in ["hero", "about", "services", "contact", "departments", "doctors", "menu", "chefs"]:
             content = content.replace(
                 f"<!-- IMAGE_PLACEHOLDER:{section} -->",
                 f"<img class='section-img' src='assets/images/{section}.png' />"
@@ -77,10 +83,11 @@ async def submit_assets(request: Request):
 
         html_file.write_text(content)
 
-    # ✅ Auto deploy to S3 after assets are ready
+    # ✅ Auto deploy to S3
+    print("🚀 Deploying website to S3...")
     subprocess.call("python3 deploy.py", cwd=BASE_DIR, shell=True)
 
-    return {"status": "assets injected + deployed ✅"}
+    return {"status": "✅ Assets injected + Website deployed to CloudFront!"}
 
 @app.get("/health")
 async def health():

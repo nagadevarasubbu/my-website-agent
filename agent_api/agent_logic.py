@@ -1,105 +1,284 @@
 from typing import Dict, Any, List
+import re
+from textwrap import dedent
+import google.generativeai as genai
 
-# Library of auto templates for any business category
-TEMPLATES = {
-    "hospital": [
-        {"id": "hero", "title": "Your Health, Our Priority.", "content": "Providing compassionate and advanced healthcare for our community."},
-        {"id": "departments", "title": "Departments", "content": "Explore our medical specialties → click for details."},
-        {"id": "doctors", "title": "Our Doctors", "content": "Meet our expert medical professionals."},
-        {"id": "contact", "title": "Contact Us", "content": "Email: info@citycarehospital.org | Phone: (555) 123-4567"}
-    ],
-    "gym": [
-        {"id": "hero", "title": "Transform Your Body.", "content": "Professional fitness training tailored to your goals."},
-        {"id": "programs", "title": "Training Programs", "content": "Strength, Cardio, HIIT, Yoga & more."},
-        {"id": "trainers", "title": "Our Trainers", "content": "Certified and experienced coaches to guide you."},
-        {"id": "contact", "title": "Join Us", "content": "Email: info@fitclub.com | Phone: (555) 555-2020"}
-    ],
-    "restaurant": [
-        {"id": "hero", "title": "Welcome to Our Kitchen.", "content": "Serving fresh, delicious meals with love."},
-        {"id": "menu", "title": "Menu", "content": "Explore our signature dishes and seasonal specials."},
-        {"id": "chefs", "title": "Our Chefs", "content": "Meet the culinary artists behind your favorite meals."},
-        {"id": "contact", "title": "Reservations", "content": "Call or reserve your table online."}
-    ],
-    "school": [
-        {"id": "hero", "title": "Shaping Tomorrow.", "content": "Quality education for inspiring young minds."},
-        {"id": "academics", "title": "Academics", "content": "Comprehensive curriculum designed for growth."},
-        {"id": "faculty", "title": "Our Teachers", "content": "Experienced educators dedicated to student success."},
-        {"id": "contact", "title": "Admissions", "content": "Apply now for the new academic year."}
-    ]
-}
-
-# fallback if unknown type
-DEFAULT_TEMPLATE = [
-    {"id": "hero", "title": "Welcome!", "content": "Discover what we offer."},
-    {"id": "about", "title": "About Us", "content": "We are committed to excellence."},
-    {"id": "services", "title": "Our Services", "content": "Here is what we provide."},
-    {"id": "contact", "title": "Contact Us", "content": "Get in touch with us anytime."}
-]
+genai.configure(api_key="AIzaSyAaYENJEtAHp2qvF-uCESKRWy6QeRB0RQc")
 
 
-def build_page_html(website_name: str, sections: List[Dict[str, str]]) -> str:
-    html_sections = ""
-    for section in sections:
-        sec_id = section["id"]
-        title = section["title"]
-        content = section["content"]
+# ------------------- Helpers -------------------
 
-        image_placeholder = f"<!-- IMAGE_PLACEHOLDER:{sec_id} -->"
+def slug_hyphen(s: str) -> str:
+    """Lowercase + hyphen slug: 'Patient Information' -> 'patient-information'."""
+    s = re.sub(r'[^a-zA-Z0-9]+', '-', s.strip().lower())
+    return re.sub(r'-+', '-', s).strip('-')
 
-        voice_block = f"""
-        <button class="voice-btn" onclick="document.getElementById('audio_{sec_id}').play()">🔊 Listen</button>
-        <audio id="audio_{sec_id}" src="assets/audio/audio_{sec_id}.mp3"></audio>
-        """
 
-        html_sections += f"""
-        <section id="{sec_id}">
-            <h2>{title}</h2>
-            <p>{content}</p>
-            {image_placeholder}
-            {voice_block}
-        </section>
-        """
+def html_escape(s: str) -> str:
+    return (
+        s.replace("&", "&amp;")
+         .replace("<", "&lt;")
+         .replace(">", "&gt;")
+         .replace('"', "&quot;")
+         .replace("'", "&#39;")
+    )
 
-    return f"""
-<!doctype html>
+
+# ------------------- Gemini Content Generator -------------------
+
+def generate_section_content(business_name: str, website_type: str, section_name: str) -> str:
+    prompt = f"""
+Your task is to create high-quality website section content.
+
+Write content for a section of a business website.
+
+BUSINESS NAME: {business_name}
+WEBSITE TYPE: {website_type}
+SECTION NAME: {section_name}
+
+CONTENT STYLE REQUIREMENTS:
+- Tone: Professional, friendly, trustworthy.
+- Write in natural human style (no robotic wording).
+- Break content into clear meaningful paragraphs.
+- Include a subheading that expands the section’s purpose.
+- Include a short bullet list of benefits, features, or key points.
+- Do NOT talk about images, web layout, placeholders, or voice scripts.
+- Do NOT mention AI, generation, or prompts.
+
+FORMAT EXACTLY LIKE THIS:
+
+<h3>[Section Purpose Title]</h3>
+
+<p>[Paragraph 1 introducing what this section means for the business and why it matters to visitors.]</p>
+
+<p>[Paragraph 2 providing reassurance, trust-building details, and clarity.]</p>
+
+<ul>
+  <li>[Key point / benefit]</li>
+  <li>[Key point / benefit]</li>
+  <li>[Key point / benefit]</li>
+</ul>
+"""
+
+    model = genai.GenerativeModel("gemini-2.5-flash") 
+    response = model.generate_content(prompt)
+
+    return response.text.strip()
+
+
+# ------------------- CSS & Page Templates -------------------
+
+def build_styles() -> str:
+    return dedent("""
+        body {
+          margin: 0;
+          font-family: 'Inter', system-ui, Arial, sans-serif;
+          background: #FFFFFF;
+          color: #1C1F33;
+          line-height: 1.6;
+        }
+
+        .navbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 32px;
+          background: #ffffff;
+          border-bottom: 1px solid #E6E8F0;
+        }
+        .navbar .brand {
+          font-size: 1.25rem;
+          font-weight: 600;
+        }
+        .navbar .links a {
+          margin-left: 18px;
+          text-decoration: none;
+          color: #1C1F33;
+          font-weight: 500;
+        }
+        .navbar .links a:hover {
+          color: #4A63FF;
+        }
+
+        .hero img {
+          width: 100%;
+          height: 420px;
+          object-fit: cover;
+          border-radius: 16px;
+        }
+
+        .content-img {
+          width: 100%;
+          height: 340px;
+          object-fit: cover;
+          border-radius: 14px;
+          margin-top: 16px;
+          border: 1px solid #E6E8F0;
+        }
+
+        .grid {
+          display: grid;
+          gap: 18px;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+        .card {
+          background: #FFFFFF;
+          border: 1px solid #E6E8F0;
+          border-radius: 16px;
+          padding: 20px;
+          transition: 0.25s;
+        }
+        .card:hover {
+          transform: translateY(-4px);
+          background: #F7F9FF;
+          border-color: #D7DBF5;
+        }
+
+        .btn {
+          display: inline-block;
+          background: #4A63FF;
+          color: #FFFFFF;
+          padding: 10px 18px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: 500;
+        }
+
+        section { padding: 44px 32px; }
+
+        footer {
+          padding: 24px;
+          text-align: center;
+          border-top: 1px solid #E6E8F0;
+          color: #555A6E;
+        }
+    """).strip()
+
+
+def build_home_html(site_name: str, sections: List[str]) -> str:
+    nav_links = " ".join([f"<a href='{slug_hyphen(s)}.html'>{html_escape(s)}</a>" for s in sections])
+    cards = "\n".join([
+        f"""
+        <div class="card">
+          <h3>{html_escape(s)}</h3>
+          <p>Discover details, benefits, and helpful information in this section.</p>
+          <a class="btn" href="{slug_hyphen(s)}.html">Open {html_escape(s)}</a>
+        </div>
+        """.strip()
+        for s in sections
+    ])
+
+    return f"""<!doctype html>
 <html>
 <head>
-    <title>{website_name}</title>
-    <link rel="stylesheet" href="assets/styles.css">
+  <meta charset="utf-8" />
+  <title>{html_escape(site_name)}</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>{build_styles()}</style>
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="brand">{website_name}</div>
+  <div class="brand">{html_escape(site_name)}</div>
+  <div class="links">{nav_links}</div>
 </nav>
 
-{html_sections}
+<section class="hero">
+  <!-- IMAGE_PLACEHOLDER:home_hero -->
+  <div>
+    <h1>Welcome to {html_escape(site_name)}</h1>
+    <div class="voice">
+      <button class="btn" onclick="document.getElementById('audio_site_intro').play()">🔊 Listen</button>
+      <audio id="audio_site_intro" src="assets/audio/site_intro.mp3"></audio>
+    </div>
+  </div>
+</section>
 
-<footer class="footer">
-    <p>© {website_name} — Powered by AI Website Agent</p>
+<section>
+  <h2>Explore Sections</h2>
+  <div class="grid">
+    {cards}
+  </div>
+</section>
+
+<footer>
+  <p>© {html_escape(site_name)}</p>
 </footer>
 
 </body>
-</html>
-"""
+</html>"""
 
+
+def build_section_html(site_name: str, section_name: str, summary_text: str) -> str:
+    sid = slug_hyphen(section_name)
+    return f"""<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>{html_escape(section_name)} — {html_escape(site_name)}</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>{build_styles()}</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="btn" href="index.html">← Home</a>
+  <div class="brand">{html_escape(section_name)}</div>
+</nav>
+
+<section>
+  <div class="section-body">{summary_text}</div>
+
+  <!-- IMAGE_PLACEHOLDER:{sid}_img1 -->
+  <!-- IMAGE_PLACEHOLDER:{sid}_img2 -->
+</section>
+
+<footer>
+  <p>© {html_escape(site_name)}</p>
+</footer>
+
+</body>
+</html>"""
+
+
+# ------------------- MAIN GENERATOR -------------------
 
 def generate_website_package(payload: Dict[str, Any]) -> Dict[str, Any]:
-    website_name = payload.get("business_name", "My Website")
-    use_case = payload.get("website_type", "").lower()
+    website_type = (payload.get("website_type") or "business").strip()
+    business_name = payload.get("business_name") or "My Website"
+    sections_all: List[str] = payload.get("sections_required") or []
+    sections_4: List[str] = [s for s in sections_all if s.strip()][:4]
 
-    sections = TEMPLATES.get(use_case, DEFAULT_TEMPLATE)
+    pages = []
+    pages.append({
+        "filename": "index.html",
+        "html_file": build_home_html(business_name, sections_4)
+    })
 
-    html = build_page_html(website_name, sections)
+    for sec in sections_4:
+        summary = generate_section_content(business_name, website_type, sec)
+        pages.append({
+            "filename": f"{slug_hyphen(sec)}.html",
+            "html_file": build_section_html(business_name, sec, summary)
+        })
 
-    images_needed = [{"id": sec["id"], "description": f"Image for {sec['title']}"} for sec in sections]
-    voices_needed = [{"id": sec["id"], "script": sec["content"]} for sec in sections]
+    images_needed = []
+    images_needed.append({"id": "home_hero", "description": f"Wide hero banner for {business_name} {website_type} website."})
+    for sec in sections_4:
+        sid = slug_hyphen(sec)
+        images_needed.append({"id": f"{sid}_img1", "description": f"Primary image for {sec}."})
+        images_needed.append({"id": f"{sid}_img2", "description": f"Supporting image for {sec}."})
+
+    voice_scripts_needed = [{
+        "id": "site_intro",
+        "script": generate_section_content(business_name, website_type, "Overview")
+    }]
+
+    callback_url = payload.get("callback_url_for_assets") or "http://54.167.58.174:9000/submit-assets"
 
     return {
-        "pages": [
-            {"page_name": "home", "filename": "index.html", "html_file": html}
-        ],
+        "pages": pages,
         "images_needed": images_needed,
-        "voice_scripts_needed": voices_needed,
-        "callback_url_for_assets": "https://explanation-cigarette-worldwide-supreme.trycloudflare.com "
+        "voice_scripts_needed": voice_scripts_needed,
+        "callback_url_for_assets": callback_url
     }
