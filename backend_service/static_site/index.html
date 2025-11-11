@@ -1,72 +1,82 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Sunshine Children&#39;s Hospital</title>
-  <link rel="stylesheet" href="assets/styles.css" />
-  <style>body { font-family: system-ui, Arial, sans-serif; margin: 0; color: #111; }
-.navbar { display:flex; align-items:center; gap:16px; padding:14px 20px; background:#111; color:#fff; }
-.navbar .brand { font-weight: 700; letter-spacing: .3px; }
-.navbar .links a { color:#fff; text-decoration:none; margin-right:14px; opacity:.9 }
-.navbar .links a:hover { opacity:1; text-decoration:underline; }
-.hero { display:grid; gap:16px; padding:40px 20px; background:#f7f7f9; }
-.grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.card { border:1px solid #e9e9ee; border-radius:12px; padding:18px; background:#fff; }
-.btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #ddd; background:#fff; cursor:pointer; }
-.btn:hover { background:#f3f3f7; }
-section { padding:28px 20px; }
-footer { padding:24px 20px; text-align:center; background:#fafafa; border-top:1px solid #eee; color:#444; }
-.img { width:100%; height:auto; display:block; border-radius:12px; border:1px solid #eee; }
-.voice { margin-top:8px; }</style>
+<meta charset="utf-8" />
+<title>Greenville Community Hospital</title>
+<style>:root {
+  --primary: #4A63FF;
+  --primary-hover: #4A63FF;
+  --text: #1C1F33;
+  --subtext: #4A4F63;
+  --border: #E6E8F0;
+  --bg-light: #F7F9FF;
+}
+
+body { margin:0; font-family:'Inter',system-ui,Arial; line-height:1.7; color:var(--text); }
+
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:24px 60px; border-bottom:1px solid var(--border); background:white; }
+.navbar .brand { font-size:1.35rem; font-weight:600; }
+.navbar .links a { margin-left:24px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
+.navbar .links a:hover { opacity:1; color:var(--primary); }
+
+.hero { padding:80px 60px; background:linear-gradient(135deg, var(--bg-light), #ffffff); }
+.hero h1 { font-size:3rem; font-weight:700; margin-bottom:18px; }
+.hero p { font-size:1.2rem; color:var(--subtext); max-width:620px; }
+
+.grid { display:grid; gap:32px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); padding-top:20px; }
+.card { background:white; border:1px solid var(--border); border-radius:18px; padding:28px; transition:0.3s; }
+.card:hover { transform:translateY(-6px); border-color:var(--primary); background:var(--bg-light); }
+
+.btn { background:var(--primary); color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:500; }
+.btn:hover { background:var(--primary-hover); }
+
+section { padding:60px 60px; }
+.section-body { max-width:900px; margin:auto; }
+.section-body h2 { font-size:2rem; margin-bottom:24px; }
+.section-body p { font-size:1.12rem; color:var(--subtext); margin-bottom:26px; }
+.section-body img { width:100%; border-radius:14px; margin:28px 0; object-fit:cover; }
+
+footer { padding:30px; text-align:center; border-top:1px solid var(--border); color:var(--subtext); }</style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="brand">Sunshine Children&#39;s Hospital</div>
-  <div class="links"><a href='home.html'>Home</a> <a href='our-services.html'>Our Services</a> <a href='patient-family-resources.html'>Patient &amp; Family Resources</a> <a href='our-team.html'>Our Team</a></div>
+  <div class="brand">Greenville Community Hospital</div>
+  <div class="links"><a href='home.html'>Home</a> <a href='services.html'>Services</a> <a href='doctors.html'>Doctors</a> <a href='patients.html'>Patients</a></div>
 </nav>
 
 <section class="hero">
-  <img class='section-img' src='assets/images/home_hero.png' />
-  <div>
-    <h1>Welcome to Sunshine Children&#39;s Hospital</h1>
-    <p>Explore our key sections below.</p>
-    <div class="voice">
-      <button class="btn" onclick="document.getElementById('audio_site_intro').play()">🔊 Listen</button>
-      <audio id="audio_site_intro" src="assets/audio/site_intro.mp3"></audio>
-    </div>
-  </div>
+  <img src='assets/images/home_hero.png' class='section-image'/>
+  <h1>Welcome to Greenville Community Hospital</h1>
+  <p>Your trusted destination.</p>
+  <button class="btn" onclick="document.getElementById('audio_site_intro').play()">🔊 Listen</button>
+  <audio id="audio_site_intro" src="assets/audio/site_intro.mp3"></audio>
 </section>
 
 <section>
   <h2>Explore Sections</h2>
-  <div class="grid">
-    <div class="card">
-              <h3>Home</h3>
-              <p>Learn more about Home at Sunshine Children&#39;s Hospital.</p>
-              <a class="btn" href="home.html">Open Home</a>
-            </div>
+  <div class="grid"><div class="card">
+            <h3>Home</h3>
+            <p>Learn more about Home.</p>
+            <a class="btn" href="home.html">View</a>
+        </div>
 <div class="card">
-              <h3>Our Services</h3>
-              <p>Learn more about Our Services at Sunshine Children&#39;s Hospital.</p>
-              <a class="btn" href="our-services.html">Open Our Services</a>
-            </div>
+            <h3>Services</h3>
+            <p>Learn more about Services.</p>
+            <a class="btn" href="services.html">View</a>
+        </div>
 <div class="card">
-              <h3>Patient &amp; Family Resources</h3>
-              <p>Learn more about Patient &amp; Family Resources at Sunshine Children&#39;s Hospital.</p>
-              <a class="btn" href="patient-family-resources.html">Open Patient &amp; Family Resources</a>
-            </div>
+            <h3>Doctors</h3>
+            <p>Learn more about Doctors.</p>
+            <a class="btn" href="doctors.html">View</a>
+        </div>
 <div class="card">
-              <h3>Our Team</h3>
-              <p>Learn more about Our Team at Sunshine Children&#39;s Hospital.</p>
-              <a class="btn" href="our-team.html">Open Our Team</a>
-            </div>
-  </div>
+            <h3>Patients</h3>
+            <p>Learn more about Patients.</p>
+            <a class="btn" href="patients.html">View</a>
+        </div></div>
 </section>
 
-<footer>
-  <p>© Sunshine Children&#39;s Hospital — Powered by AI Website Agent</p>
-</footer>
-
+<footer>© Greenville Community Hospital</footer>
 </body>
 </html>
