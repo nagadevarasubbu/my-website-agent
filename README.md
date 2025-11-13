@@ -1,27 +1,36 @@
-🚀 AI-Driven Automated Website Generator
-Fully automated website creation using Gemini + FastAPI + AWS S3 + CloudFront + DynamoDB
+# 🚀 AI-Driven Automated Website Generator
 
-📌 Overview
+Fully automated website creation using **Google Gemini + FastAPI + AWS S3 + CloudFront + DynamoDB**
+
+---
+
+## 📌 Overview
 
 This project automatically generates a complete, professional, fully deployed website using only basic business inputs.
 
 Once a user provides:
 
-Business Name
-Website Type
-Required Sections
+* **Business Name**
+* **Website Type**
+* **Required Sections**
 
 The system automatically:
 
-1.Refines Inputs using AI
-2.Generates detailed content using Google Gemini
-3.Creates image & audio requirements
-4.Builds all HTML pages dynamically
-5.Deploys website to AWS S3 + CloudFront
-6.Logs deployment to DynamoDB
-7.Sends status callback to the requesting agent
+* Refines Inputs using AI
+* Generates detailed content using Google Gemini
+* Creates image & audio requirements
+* Builds all HTML pages dynamically
+* Deploys website to AWS S3 + CloudFront
+* Logs deployment to DynamoDB
+* Sends status callback to the requesting agent
 
-📁 Project Structure
+> ✅ No manual coding… no design work… everything is automated.
+
+---
+
+## 📁 Project Structure
+
+```
 my-website-agent/
 │
 ├── agent_api/
@@ -41,149 +50,223 @@ my-website-agent/
 │
 ├── README.md
 └── dynamo_policy.json
+```
 
-⚙️ Prerequisites
+---
 
-Python 3.9+
+## ⚙️ Prerequisites
 
-AWS CLI configured
+* Python **3.9+**
+* AWS CLI configured
+* EC2 Instance (Amazon Linux 2023)
+* IAM Role with:
 
-IAM Role with S3, CloudFront, DynamoDB access
+  * S3 Access
+  * CloudFront Access
+  * DynamoDB Access
+* Google Gemini API Key
 
-EC2 Instance (Amazon Linux 2023)
+---
 
+## 🔧 1. Setup — Agent API Service (Port 8000)
 
-🔧 1. Setup — Agent API Service (Port 8000)
-Navigate to project:
+### Navigate to project:
+
+```bash
 cd ~/my-website-agent
 cd my-website-agent/agent_api
+```
 
-Create virtual environment:
+### Create virtual environment:
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
 
-Install requirements:
+### Install requirements:
+
+```bash
 pip install -r requirements.txt
+```
 
-Start FastAPI server:
+### Start FastAPI server:
+
+```bash
 pkill -f uvicorn     # stop old instance (optional)
 uvicorn main:app --host 0.0.0.0 --port 8000
+```
 
-🔧 2. Setup — Backend Service (Port 9000)
-Navigate:
+---
+
+## 🔧 2. Setup — Backend Service (Port 9000)
+
+### Navigate:
+
+```bash
 cd ~/my-website-agent/backend_service
+```
 
-Create virtual environment:
+### Create virtual environment:
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
 
-Install requirements:
+### Install requirements:
+
+```bash
 pip install -r requirements.txt
+```
 
-Start backend server:
+### Start backend server:
+
+```bash
 uvicorn server:app --host 0.0.0.0 --port 9000
+```
 
-🖥️ 3. Running Both Services Using tmux (Recommended)
-Install tmux:
+---
+
+## 🖥️ 3. Running Both Services Using `tmux` (Recommended)
+
+### Install tmux:
+
+```bash
 sudo yum install -y tmux
+```
 
-Start Agent API tmux session
+### ▶ Start Agent API tmux session:
+
+```bash
 tmux new -s ris
 cd ~/my-website-agent/agent_api
 source venv/bin/activate
 uvicorn main:app --host 0.0.0.0 --port 8000
-
+```
 
 Detach:
+**CTRL + B**, then **D**
 
-CTRL + B, then D
+### ▶ Start Backend Service tmux session:
 
-Start Backend Service tmux session
+```bash
 tmux new -s oj
 cd ~/my-website-agent/backend_service
 source venv/bin/activate
 uvicorn server:app --host 0.0.0.0 --port 9000
-
+```
 
 Re-attach anytime:
 
+```bash
 tmux attach -t oj
 tmux attach -t ris
+```
 
-🧠 4. How the System Works
+---
 
-n8n sends a payload → /generate-website
+## 🧠 4. How the System Works
 
-agent_api:
+### **Workflow**
 
-Refines inputs (agent_layer)
+1. n8n sends payload → `/generate-website`
+2. **agent_api** (Port 8000):
 
-Generates website text (Gemini)
+   * Refines inputs
+   * Generates content using Gemini
+   * Produces HTML + image prompts + voice scripts
+3. **backend_service** (Port 9000):
 
-Outputs HTML pages, image prompts, voice scripts
+   * Receives assets
+   * Builds final website
+   * Deploys to S3
+   * Invalidates CloudFront
+   * Logs to DynamoDB
+   * Sends callback
 
-backend_service:
+> 🔄 Everything is fully automated.
 
-Receives images/audio
+---
 
-Inserts them into HTML
+## 🌐 5. Deployment Process
 
-Deploys to S3 bucket
+Inside **backend_service**:
 
-Invalidates CloudFront
-
-Logs to DynamoDB
-
-Sends callback to friend's agent
-
-Everything happens automatically.
-
-🌐 5. Deployment Process
-
-Inside backend_service:
-
+```bash
 python3 deploy.py
-
+```
 
 This script:
 
-✔ Uploads static_site → S3
-✔ Clears CloudFront cache
-✔ Writes DynamoDB log
-✔ Notifies requesting agent
+* Uploads `static_site/` → S3
+* Clears CloudFront cache
+* Logs deployment to DynamoDB
+* Sends callback
 
-🔑 6. Environment Variables
-Agent API
+---
+
+## 🔑 6. Environment Variables
+
+### **Agent API**
+
+```bash
 export GOOGLE_API_KEY="your_key"
+```
 
-Backend Service
+### **Backend Service**
+
+```bash
 export DEPLOY_S3_BUCKET="my-website-agent-output"
 export DEPLOY_CF_ID="E25Q9X6SJA9ERD"
 export DYNAMO_TABLE="WebsiteDeploymentLogs"
+```
 
-🧪 7. Testing
-Test DynamoDB Write:
+---
+
+## 🧪 7. Testing
+
+### Test DynamoDB Write:
+
+```bash
 python3 test_dynamo_put.py
+```
 
-Test Agent API:
+### Test Agent API:
+
+```bash
 curl -X POST http://<EC2-IP>:8000/generate-website \
      -H "Content-Type: application/json" \
      -d '{"business_name":"Test","website_type":"Hospital","sections_required":["Home","Doctors"]}'
+```
 
-🪲 8. Troubleshooting
-Port already in use:
+---
+
+## 🪲 8. Troubleshooting
+
+### Port already in use:
+
+```bash
 pkill -f uvicorn
+```
 
-tmux session forgot:
+### Forgot tmux session:
+
+```bash
 tmux ls
 tmux attach -t <name>
+```
 
-S3 deploy not updating:
+### S3 deploy not updating:
 
-Ensure CloudFront invalidation works
+* Ensure CloudFront invalidation works
+* Ensure S3 bucket permissions
+* Ensure EC2 IAM role access
 
-Ensure bucket has permissions
+---
 
-🎯 Conclusion
+## 🎯 Conclusion
 
-This project delivers a complete automated website generation system powered by AI and AWS. With just a few API inputs, the entire website — content, images, audio, deployment, and logs — is created end-to-end.
+This project automates the entire lifecycle of website creation — from AI-generated content to hosting and deployment logs. With only minimal inputs, the system delivers a fully deployed, professional-grade website.
+
+> 🚀 **True end-to-end AI automation.**
