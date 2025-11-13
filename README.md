@@ -1,6 +1,6 @@
 # 🚀 AI-Driven Automated Website Generator
 
-Fully automated website creation using **Google Gemini + FastAPI + AWS S3 + CloudFront + DynamoDB**
+Fully automated website creation using **Amazon Bedrock + FastAPI + AWS S3 + CloudFront + DynamoDB**
 
 ---
 
@@ -8,7 +8,7 @@ Fully automated website creation using **Google Gemini + FastAPI + AWS S3 + Clou
 
 This project automatically generates a complete, professional, fully deployed website using only basic business inputs.
 
-Once a user provides:
+When the user provides:
 
 * **Business Name**
 * **Website Type**
@@ -16,15 +16,15 @@ Once a user provides:
 
 The system automatically:
 
-* Refines Inputs using AI
-* Generates detailed content using Google Gemini
-* Creates image & audio requirements
+* Refines Inputs using **AI (Bedrock Agent Layer)**
+* Generates detailed content using **Amazon Bedrock Claude Sonnet**
+* Creates **image & audio requirements** for the media agent
 * Builds all HTML pages dynamically
-* Deploys website to AWS S3 + CloudFront
-* Logs deployment to DynamoDB
-* Sends status callback to the requesting agent
+* Deploys website to **AWS S3 + CloudFront**
+* Logs deployment to **DynamoDB**
+* Sends a callback to the requesting agent
 
-> ✅ No manual coding… no design work… everything is automated.
+✔ **No manual coding… no design work… everything is automated.**
 
 ---
 
@@ -33,23 +33,23 @@ The system automatically:
 ```
 my-website-agent/
 │
-├── agent_api/
-│   ├── main.py               # FastAPI service (AI content generator)
-│   ├── agent_logic.py        # Website builder logic (Gemini-based)
-│   ├── agent_layer.py        # Input refinement AI layer
+├── agent_api/                         # AI Logic + Input Refinement
+│   ├── main.py                        # FastAPI service (AI content generator)
+│   ├── agent_logic.py                 # Website builder logic (Bedrock-based)
+│   ├── agent_layer.py                 # Input refinement AI layer
 │   ├── requirements.txt
 │   ├── venv/
 │
-├── backend_service/
-│   ├── server.py             # Receives assets + builds static site
-│   ├── deploy.py             # S3 + CloudFront deploy + Dynamo logging
-│   ├── db.py                 # DynamoDB writer
-│   ├── static_site/          # Auto-generated website
+├── backend_service/                   # Website Assembly + Deployment
+│   ├── server.py                      # Receives assets + builds static site
+│   ├── deploy.py                      # S3 + CloudFront deploy + Dynamo logging
+│   ├── db.py                          # DynamoDB writer
+│   ├── static_site/                   # Auto-generated website
 │   ├── requirements.txt
 │   ├── venv/
 │
 ├── README.md
-└── dynamo_policy.json
+└── dynamo_policy.json                 # IAM policy for Dynamo logging
 ```
 
 ---
@@ -58,19 +58,21 @@ my-website-agent/
 
 * Python **3.9+**
 * AWS CLI configured
-* EC2 Instance (Amazon Linux 2023)
-* IAM Role with:
+* IAM Role with access to:
 
-  * S3 Access
-  * CloudFront Access
-  * DynamoDB Access
-* Google Gemini API Key
+  * S3
+  * CloudFront
+  * DynamoDB
+  * Amazon Bedrock InvokeModel
+* EC2 Instance (Amazon Linux 2023)
+
+➡️ **No Gemini API — Project uses Bedrock only.**
 
 ---
 
 ## 🔧 1. Setup — Agent API Service (Port 8000)
 
-### Navigate to project:
+### Navigate:
 
 ```bash
 cd ~/my-website-agent
@@ -90,10 +92,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Start FastAPI server:
+### Start FastAPI service:
 
 ```bash
-pkill -f uvicorn     # stop old instance (optional)
+pkill -f uvicorn   # optional
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
@@ -128,7 +130,7 @@ uvicorn server:app --host 0.0.0.0 --port 9000
 
 ---
 
-## 🖥️ 3. Running Both Services Using `tmux` (Recommended)
+## 🖥️ 3. Run Both Services Using tmux
 
 ### Install tmux:
 
@@ -136,7 +138,7 @@ uvicorn server:app --host 0.0.0.0 --port 9000
 sudo yum install -y tmux
 ```
 
-### ▶ Start Agent API tmux session:
+### Run Agent API in tmux:
 
 ```bash
 tmux new -s ris
@@ -145,10 +147,9 @@ source venv/bin/activate
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-Detach:
-**CTRL + B**, then **D**
+Detach: `CTRL + B`, then `D`
 
-### ▶ Start Backend Service tmux session:
+### Run Backend Service in tmux:
 
 ```bash
 tmux new -s oj
@@ -157,7 +158,7 @@ source venv/bin/activate
 uvicorn server:app --host 0.0.0.0 --port 9000
 ```
 
-Re-attach anytime:
+Reattach anytime:
 
 ```bash
 tmux attach -t oj
@@ -168,30 +169,28 @@ tmux attach -t ris
 
 ## 🧠 4. How the System Works
 
-### **Workflow**
+### agent_api (Port 8000)
 
-1. n8n sends payload → `/generate-website`
-2. **agent_api** (Port 8000):
+* Refines inputs using **agent_layer**
+* Generates website content using **Bedrock**
+* Produces HTML structures, image prompts, audio scripts
 
-   * Refines inputs
-   * Generates content using Gemini
-   * Produces HTML + image prompts + voice scripts
-3. **backend_service** (Port 9000):
+### backend_service (Port 9000)
 
-   * Receives assets
-   * Builds final website
-   * Deploys to S3
-   * Invalidates CloudFront
-   * Logs to DynamoDB
-   * Sends callback
+* Receives image & audio assets
+* Builds final HTML pages
+* Deploys to S3
+* Invalidates CloudFront
+* Logs deployment into DynamoDB
+* Sends callback to requesting agent
 
-> 🔄 Everything is fully automated.
+✔ Everything happens automatically.
 
 ---
 
 ## 🌐 5. Deployment Process
 
-Inside **backend_service**:
+Inside backend_service:
 
 ```bash
 python3 deploy.py
@@ -199,27 +198,27 @@ python3 deploy.py
 
 This script:
 
-* Uploads `static_site/` → S3
+* Uploads `static_site/` to S3
 * Clears CloudFront cache
-* Logs deployment to DynamoDB
-* Sends callback
+* Writes a DynamoDB log
+* Notifies the agent
 
 ---
 
 ## 🔑 6. Environment Variables
 
-### **Agent API**
+### Backend
 
-```bash
-export GOOGLE_API_KEY="your_key"
 ```
-
-### **Backend Service**
-
-```bash
 export DEPLOY_S3_BUCKET="my-website-agent-output"
 export DEPLOY_CF_ID="E25Q9X6SJA9ERD"
 export DYNAMO_TABLE="WebsiteDeploymentLogs"
+```
+
+### Bedrock
+
+```
+AWS credentials must allow InvokeModel
 ```
 
 ---
@@ -244,29 +243,39 @@ curl -X POST http://<EC2-IP>:8000/generate-website \
 
 ## 🪲 8. Troubleshooting
 
-### Port already in use:
+### Fix port in use:
 
 ```bash
 pkill -f uvicorn
 ```
 
-### Forgot tmux session:
+### List tmux sessions:
 
 ```bash
 tmux ls
+```
+
+### Reattach:
+
+```bash
 tmux attach -t <name>
 ```
 
-### S3 deploy not updating:
+### S3 updates not showing:
 
-* Ensure CloudFront invalidation works
-* Ensure S3 bucket permissions
-* Ensure EC2 IAM role access
+* Confirm CloudFront invalidation
+* Confirm bucket permissions
 
 ---
 
 ## 🎯 Conclusion
 
-This project automates the entire lifecycle of website creation — from AI-generated content to hosting and deployment logs. With only minimal inputs, the system delivers a fully deployed, professional-grade website.
+This system delivers **a fully automated AI-based website generator** powered by Amazon Bedrock and AWS infrastructure. With minimal input, the system handles:
 
-> 🚀 **True end-to-end AI automation.**
+* Text generation
+* Image & audio requirement creation
+* HTML assembly
+* Deployment
+* Logging
+
+All completely automated end-to-end.
