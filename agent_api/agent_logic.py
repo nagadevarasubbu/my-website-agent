@@ -1,240 +1,197 @@
 from typing import Dict, Any, List
 import re
-import os
 import json
 from textwrap import dedent
 import google.generativeai as genai
+from agent_layer import refine_website_inputs
 
-# ---------- Configure Gemini ----------
-genai.configure(api_key=os.getenv("AIzaSyAaYENJEtAHp2qvF-uCESKRWy6QeRB0RQc")) 
-model = genai.GenerativeModel("gemini-2.5-flash")
+# ---------- CONFIGURE GEMINI ----------
+# (Optional Bedrock Claude reference)
+# from langchain_aws import ChatBedrock
+# bedrock_model = ChatBedrock(model_id="anthropic.claude-3-sonnet-20240229-v1:0", region_name="us-east-1")
 
-# ---------- helpers ----------
+# 🔑 Set Gemini key directly here
+genai.configure(api_key="AIzaSyDagMyFx-dxUIs4xtdqU4newjP39HsN6nQ") 
+gemini_model = genai.GenerativeModel("gemini-2.5-flash") 
+
+# ---------- HELPERS ----------
 def slug_hyphen(s: str) -> str:
     s = re.sub(r'[^a-zA-Z0-9]+', '-', s.strip().lower())
     return re.sub(r'-+', '-', s).strip('-')
 
 def html_escape(s: str) -> str:
-    return (
-        s.replace("&", "&amp;")
-         .replace("<", "&lt;")
-         .replace(">", "&gt;")
-         .replace('"', "&quot;")
-         .replace("'", "&#39;")
-    )
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;").replace("'", "&#39;")
 
-# ---------- theme color selection ----------
+# ---------- THEME ----------
 def pick_theme_color(website_type: str) -> str:
     wt = website_type.lower()
-    if any(k in wt for k in ["hospital", "health", "clinic", "care"]):
-        return "#4A63FF"
-    if any(k in wt for k in ["gym", "fitness", "sports"]):
-        return "#FF6B3D"
-    if any(k in wt for k in ["spa", "yoga", "wellness"]):
-        return "#6A8CAF"
-    if any(k in wt for k in ["school", "education", "training"]):
-        return "#8A5AFF"
-    if any(k in wt for k in ["tech", "software", "it", "digital"]):
-        return "#0057FF"
-    return "#4A63FF"  # default
+    if any(k in wt for k in ["hospital", "health", "clinic", "care"]): return "#4A63FF"
+    if any(k in wt for k in ["gym", "fitness", "sports"]): return "#FF6B3D"
+    if any(k in wt for k in ["spa", "yoga", "wellness"]): return "#6A8CAF"
+    if any(k in wt for k in ["school", "education", "training"]): return "#8A5AFF"
+    if any(k in wt for k in ["restaurant", "food", "hotel"]): return "#D96F32"
+    if any(k in wt for k in ["tech", "software", "it", "digital"]): return "#0057FF"
+    return "#4A63FF"
 
-# ---------- fallback text ----------
-def fallback_section_text(section: str, site_name: str, website_type: str) -> str:
-    return dedent(f"""
-        {section} at {site_name}
-
-        {section} plays an important role in what we do at {site_name}.
-        As a {website_type} organization, we focus on clarity, trust, and support.
-
-        On this page, you will find helpful information and guidance.
-        We are here to assist and provide a meaningful experience.
-    """).strip()
-
-# ---------- GPT Section Writer ----------
+# ---------- GEMINI CONTENT GENERATOR ----------
 def generate_sections_with_gemini(business_name: str, website_type: str, sections: List[str]) -> Dict[str, str]:
     prompt = dedent(f"""
-        You are a professional website content writer.
+        You are a professional AI website writer for any industry.
 
         business_name: {business_name}
         website_type: {website_type}
         sections: {sections}
 
-        For each section, write **2–3 paragraphs** (6–12 sentences total).
-        Warm, human tone. Clear and useful.
-        No repeating the section title in first sentence.
-        No filler like "This section provides".
-        
-        Return JSON:
+        Write 5–6 paragraphs (350–500 words) per section.
+        Make the tone professional yet friendly and domain-appropriate:
+        - Hospitals → care, compassion, trust
+        - Restaurants → taste, experience, ambiance
+        - Tech → innovation, reliability, quality
+        - Fitness → motivation, transformation, wellness
+        - Education → learning, growth, empowerment
+
+        Each section should be rich, structured, and human-like.
+
+        Return JSON only:
         {{
           "sections": [
-            {{ "title": "...", "content": "..." }}
+            {{ "title": "Section Name", "content": "Detailed text..." }}
           ]
         }}
     """)
 
     try:
-        response = model.generate_content(prompt)
-        data = json.loads(response.text)
-
-        final = {}
+        response = gemini_model.generate_content(prompt)
+        data = json.loads(response.text.strip().replace("```json", "").replace("```", ""))
+        result = {}
         for sec in data.get("sections", []):
             if sec.get("title") and sec.get("content"):
-                final[sec["title"]] = sec["content"]
-        return final
-    except:
+                result[sec["title"]] = sec["content"]
+        print("🧠 Gemini content generated successfully.")
+        return result
+    except Exception as e:
+        print("⚠️ Gemini parsing failed:", e)
         return {}
 
-# ---------- Styles (uses theme color) ----------
+# ---------- CHATBOT FAQs ----------
+def get_chatbot_faqs(website_type: str):
+    wt = website_type.lower()
+    if "hospital" in wt:
+        return {
+            "How do I book an appointment?": "You can schedule an appointment online or contact our helpdesk at any time.",
+            "Do you offer 24/7 emergency care?": "Yes, emergency and intensive care units are operational round the clock.",
+            "Are health insurance cards accepted?": "We accept major insurance plans for cashless treatment.",
+        }
+    elif "restaurant" in wt:
+        return {
+            "Do you offer home delivery?": "Yes, we provide doorstep delivery through our delivery partners.",
+            "Are vegan dishes available?": "Absolutely, we offer a variety of vegan and gluten-free dishes.",
+            "Can I reserve a table online?": "Yes, online reservations are available directly through our website.",
+        }
+    elif "tech" in wt:
+        return {
+            "What services do you provide?": "We offer web, cloud, and AI-driven software solutions for businesses.",
+            "How do you ensure project quality?": "Our QA team follows strict testing and agile development practices.",
+            "Do you offer maintenance support?": "Yes, post-deployment maintenance and updates are included.",
+        }
+    else:
+        return {
+            "How can I contact you?": "You can reach us via the contact form or email for any inquiries.",
+            "What services are offered?": "We provide tailored solutions based on your business needs.",
+            "Where are you located?": "Our main office is located in the city center for easy accessibility.",
+        }
+
+# ---------- STYLES ----------
 def build_styles(primary: str) -> str:
     return dedent(f"""
         :root {{
           --primary: {primary};
-          --primary-hover: {primary};
           --text: #1C1F33;
-          --subtext: #4A4F63;
+          --subtext: #545C6B;
           --border: #E6E8F0;
-          --bg-light: #F7F9FF;
+          --bg-light: #F9FAFE;
         }}
-
-        body {{ margin:0; font-family:'Inter',system-ui,Arial; line-height:1.7; color:var(--text); }}
-
-        .navbar {{ display:flex; justify-content:space-between; align-items:center; padding:24px 60px; border-bottom:1px solid var(--border); background:white; }}
-        .navbar .brand {{ font-size:1.35rem; font-weight:600; }}
-        .navbar .links a {{ margin-left:24px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }}
-        .navbar .links a:hover {{ opacity:1; color:var(--primary); }}
-
-        .hero {{ padding:80px 60px; background:linear-gradient(135deg, var(--bg-light), #ffffff); }}
-        .hero h1 {{ font-size:3rem; font-weight:700; margin-bottom:18px; }}
-        .hero p {{ font-size:1.2rem; color:var(--subtext); max-width:620px; }}
-
-        .grid {{ display:grid; gap:32px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); padding-top:20px; }}
-        .card {{ background:white; border:1px solid var(--border); border-radius:18px; padding:28px; transition:0.3s; }}
-        .card:hover {{ transform:translateY(-6px); border-color:var(--primary); background:var(--bg-light); }}
-
-        .btn {{ background:var(--primary); color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:500; }}
-        .btn:hover {{ background:var(--primary-hover); }}
-
-        section {{ padding:60px 60px; }}
-        .section-body {{ max-width:900px; margin:auto; }}
-        .section-body h2 {{ font-size:2rem; margin-bottom:24px; }}
-        .section-body p {{ font-size:1.12rem; color:var(--subtext); margin-bottom:26px; }}
-        .section-body img {{ width:100%; border-radius:14px; margin:28px 0; object-fit:cover; }}
-
-        footer {{ padding:30px; text-align:center; border-top:1px solid var(--border); color:var(--subtext); }}
+        body {{ margin:0; font-family:'Inter',system-ui,Arial; background:white; color:var(--text); line-height:1.7; }}
+        .navbar {{ display:flex; justify-content:space-between; padding:22px 60px; border-bottom:1px solid var(--border); background:white; }}
+        .navbar .brand {{ font-size:1.4rem; font-weight:600; }}
+        .navbar .links a {{ margin-left:22px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }}
+        .navbar .links a:hover {{ color:var(--primary); opacity:1; }}
+        .hero {{ position:relative; height:500px; overflow:hidden; }}
+        .hero img {{ width:100%; height:100%; object-fit:cover; filter:brightness(0.6); }}
+        .hero-content {{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white; }}
+        .hero-content h1 {{ font-size:3rem; margin-bottom:10px; font-weight:700; }}
+        .hero-content p {{ font-size:1.2rem; opacity:0.9; margin-bottom:20px; }}
+        section {{ padding:70px 80px; max-width:1100px; margin:auto; }}
+        .section-body {{ display:flex; flex-direction:column; align-items:center; gap:25px; }}
+        .section-body img {{ width:65%; border-radius:14px; object-fit:cover; }}
+        .section-body p {{ font-size:1.12rem; color:var(--subtext); text-align:justify; line-height:1.8; }}
+        #chatbot {{ position:fixed; bottom:20px; right:20px; background:var(--primary); color:white; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; font-size:22px; }}
+        #chat-window {{ display:none; position:fixed; bottom:90px; right:20px; width:320px; background:white; border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }}
     """).strip()
 
 # ---------- HOME ----------
-def build_home_html(site_name: str, sections: List[str], theme: str) -> str:
+def build_home_html(site_name: str, sections: List[str], theme: str, website_type: str) -> str:
+    faqs = get_chatbot_faqs(website_type)
+    faq_html = "".join([f"<p><b>{q}</b><br>{a}</p>" for q, a in faqs.items()])
     nav_links = " ".join(f"<a href='{slug_hyphen(s)}.html'>{html_escape(s)}</a>" for s in sections)
-    cards = "\n".join(f"""
-        <div class="card">
-            <h3>{html_escape(s)}</h3>
-            <p>Learn more about {html_escape(s)}.</p>
-            <a class="btn" href="{slug_hyphen(s)}.html">View</a>
-        </div>
-    """.strip() for s in sections)
+    cards = "\n".join(f"<div class='card'><h3>{html_escape(s)}</h3><p>Explore {html_escape(s)} to learn more.</p><a class='btn' href='{slug_hyphen(s)}.html'>View</a></div>" for s in sections)
 
     return f"""<!doctype html>
 <html>
-<head>
-<meta charset="utf-8" />
-<title>{html_escape(site_name)}</title>
-<style>{build_styles(theme)}</style>
-</head>
+<head><meta charset="utf-8"><title>{html_escape(site_name)}</title><style>{build_styles(theme)}</style></head>
 <body>
-
-<nav class="navbar">
-  <div class="brand">{html_escape(site_name)}</div>
-  <div class="links">{nav_links}</div>
-</nav>
-
+<nav class="navbar"><div class="brand">{html_escape(site_name)}</div><div class="links">{nav_links}</div></nav>
 <section class="hero">
   <!-- IMAGE_PLACEHOLDER:home_hero -->
-  <h1>Welcome to {html_escape(site_name)}</h1>
-  <p>Your trusted destination.</p>
-  <button class="btn" onclick="document.getElementById('audio_site_intro').play()">🔊 Listen</button>
-  <audio id="audio_site_intro" src="assets/audio/site_intro.mp3"></audio>
+  <div class="hero-content"><h1>Welcome to {html_escape(site_name)}</h1><p>Discover excellence, innovation, and care with us.</p></div>
 </section>
+<section><h2 style="text-align:center;">Explore Our Sections</h2><div class="grid">{cards}</div></section>
+<button id="chatbot">💬</button>
+<div id="chat-window"><h4>Ask Us Anything</h4><div id="chat-content">{faq_html}</div></div>
+<script>const chatBtn=document.getElementById('chatbot');const chatWin=document.getElementById('chat-window');chatBtn.addEventListener('click',()=>{{chatWin.style.display=chatWin.style.display==='none'?'block':'none';}});</script>
+<footer>© {html_escape(site_name)}</footer></body></html>"""
 
-<section>
-  <h2>Explore Sections</h2>
-  <div class="grid">{cards}</div>
-</section>
-
-<footer>© {html_escape(site_name)}</footer>
-</body>
-</html>"""
-
-# ---------- SECTIONS ----------
+# ---------- SECTION PAGE ----------
 def build_section_html(site_name: str, section_name: str, summary_text: str, theme: str) -> str:
     sid = slug_hyphen(section_name)
     parts = [p.strip() for p in summary_text.split("\n\n") if p.strip()]
-    while len(parts) < 3: parts.append(parts[-1])
-    p1, p2, p3 = parts[0], parts[1], parts[2]
-
+    while len(parts) < 5:
+        parts.append(parts[-1])
     return f"""<!doctype html>
-<html>
-<head>
-<meta charset="utf-8" />
-<title>{html_escape(section_name)} — {html_escape(site_name)}</title>
-<style>{build_styles(theme)}</style>
-</head>
-<body>
-
-<nav class="navbar">
-  <a class="btn" href="index.html">← Back</a>
-  <div class="brand">{html_escape(section_name)}</div>
-</nav>
-
+<html><head><meta charset="utf-8"><title>{html_escape(section_name)} — {html_escape(site_name)}</title><style>{build_styles(theme)}</style></head>
+<body><nav class="navbar"><a class="btn" href="index.html">← Back</a><div class="brand">{html_escape(section_name)}</div></nav>
 <section class="section-body">
-  <h2>{html_escape(section_name)}</h2>
+<p>{html_escape(parts[0])}</p><!-- IMAGE_PLACEHOLDER:{sid}_img1 -->
+<p>{html_escape(parts[1])}</p><!-- IMAGE_PLACEHOLDER:{sid}_img2 -->
+<p>{html_escape(parts[2])}</p><p>{html_escape(parts[3])}</p><p>{html_escape(parts[4])}</p>
+</section><footer>© {html_escape(site_name)}</footer></body></html>"""
 
-  <p>{html_escape(p1)}</p>
-  <!-- IMAGE_PLACEHOLDER:{sid}_img1 -->
-
-  <p>{html_escape(p2)}</p>
-  <!-- IMAGE_PLACEHOLDER:{sid}_img2 -->
-
-  <p>{html_escape(p3)}</p>
-</section>
-
-<footer>© {html_escape(site_name)}</footer>
-</body>
-</html>"""
-
-# ---------- IMAGES + NARRATION ----------
+# ---------- IMAGES + AUDIO ----------
 def make_image_prompts(website_type: str, site_name: str, sections_4: List[str]):
-    prompts = [{"id": "home_hero", "description": f"Hero banner for a {website_type} website '{site_name}'. Clean and warm."}]
+    prompts = [{"id": "home_hero", "description": f"Wide, cinematic hero image for '{site_name}' ({website_type}). Vibrant, realistic, natural lighting, professional look."}]
     for sec in sections_4:
         sid = slug_hyphen(sec)
-        prompts.append({"id": f"{sid}_img1", "description": f"Primary image for '{sec}'."})
-        prompts.append({"id": f"{sid}_img2", "description": f"Supporting contextual image for '{sec}'."})
+        prompts.append({"id": f"{sid}_img1", "description": f"Primary image for '{sec}' showing authentic visuals of {website_type}. High clarity, modern style, human context."})
+        prompts.append({"id": f"{sid}_img2", "description": f"Supporting image for '{sec}' focusing on trust, connection, and professionalism."})
     return prompts
 
 def make_site_narration(site_name: str, website_type: str, sections_4: List[str]):
-    listed = ", ".join(sections_4[:-1]) + (", and " + sections_4[-1])
-    return f"Welcome to {site_name}, your trusted {website_type} destination. Explore {listed}."
+    listed = ", ".join(sections_4[:-1]) + ", and " + sections_4[-1]
+    return f"Welcome to {site_name}, your trusted destination for {website_type}. Explore {listed}, and experience our commitment to quality and excellence."
 
 # ---------- MAIN ----------
 def generate_website_package(payload: Dict[str, Any]):
     website_type = (payload.get("website_type") or "business").strip()
     business_name = payload.get("business_name") or "My Website"
     sections_all = payload.get("sections_required") or []
-    sections_4 = [s.strip() for s in sections_all][:4] or ["About", "Services", "Team", "Contact"]
-
+    refined = refine_website_inputs(business_name, website_type, sections_all)
+    business_name, website_type, sections_all = refined["business_name"], refined["website_type"], refined["sections"]
+    sections_4 = sections_all[:4] or ["About", "Services", "Team", "Contact"]
     theme = pick_theme_color(website_type)
-
     sections_content = generate_sections_with_gemini(business_name, website_type, sections_4)
-
-    pages = [{"filename": "index.html", "html_file": build_home_html(business_name, sections_4, theme)}]
-
+    pages = [{"filename": "index.html", "html_file": build_home_html(business_name, sections_4, theme, website_type)}]
     for sec in sections_4:
-        text = sections_content.get(sec) or fallback_section_text(sec, business_name, website_type)
+        text = sections_content.get(sec) or "Content unavailable."
         pages.append({"filename": f"{slug_hyphen(sec)}.html", "html_file": build_section_html(business_name, sec, text, theme)})
+    return {"pages": pages, "images_needed": make_image_prompts(website_type, business_name, sections_4), "voice_scripts_needed": [{"id": "site_intro", "script": make_site_narration(business_name, website_type, sections_4)}], "callback_url_for_assets": payload.get("callback_url_for_assets") or "http://54.167.58.174:9000/submit-assets"}
 
-    return {
-        "pages": pages,
-        "images_needed": make_image_prompts(website_type, business_name, sections_4),
-        "voice_scripts_needed": [{"id": "site_intro", "script": make_site_narration(business_name, website_type, sections_4)}],
-        "callback_url_for_assets": payload.get("callback_url_for_assets") or "http://54.167.58.174:9000/submit-assets"
-    }

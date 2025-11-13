@@ -1,82 +1,39 @@
 <!doctype html>
 <html>
-<head>
-<meta charset="utf-8" />
-<title>Greenville Community Hospital</title>
-<style>:root {
-  --primary: #4A63FF;
-  --primary-hover: #4A63FF;
+<head><meta charset="utf-8"><title>Mia&#39;s Trattoria</title><style>:root {
+  --primary: #0057FF;
   --text: #1C1F33;
-  --subtext: #4A4F63;
+  --subtext: #545C6B;
   --border: #E6E8F0;
-  --bg-light: #F7F9FF;
+  --bg-light: #F9FAFE;
 }
-
-body { margin:0; font-family:'Inter',system-ui,Arial; line-height:1.7; color:var(--text); }
-
-.navbar { display:flex; justify-content:space-between; align-items:center; padding:24px 60px; border-bottom:1px solid var(--border); background:white; }
-.navbar .brand { font-size:1.35rem; font-weight:600; }
-.navbar .links a { margin-left:24px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
-.navbar .links a:hover { opacity:1; color:var(--primary); }
-
-.hero { padding:80px 60px; background:linear-gradient(135deg, var(--bg-light), #ffffff); }
-.hero h1 { font-size:3rem; font-weight:700; margin-bottom:18px; }
-.hero p { font-size:1.2rem; color:var(--subtext); max-width:620px; }
-
-.grid { display:grid; gap:32px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); padding-top:20px; }
-.card { background:white; border:1px solid var(--border); border-radius:18px; padding:28px; transition:0.3s; }
-.card:hover { transform:translateY(-6px); border-color:var(--primary); background:var(--bg-light); }
-
-.btn { background:var(--primary); color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:500; }
-.btn:hover { background:var(--primary-hover); }
-
-section { padding:60px 60px; }
-.section-body { max-width:900px; margin:auto; }
-.section-body h2 { font-size:2rem; margin-bottom:24px; }
-.section-body p { font-size:1.12rem; color:var(--subtext); margin-bottom:26px; }
-.section-body img { width:100%; border-radius:14px; margin:28px 0; object-fit:cover; }
-
-footer { padding:30px; text-align:center; border-top:1px solid var(--border); color:var(--subtext); }</style>
-</head>
+body { margin:0; font-family:'Inter',system-ui,Arial; background:white; color:var(--text); line-height:1.7; }
+.navbar { display:flex; justify-content:space-between; padding:22px 60px; border-bottom:1px solid var(--border); background:white; }
+.navbar .brand { font-size:1.4rem; font-weight:600; }
+.navbar .links a { margin-left:22px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
+.navbar .links a:hover { color:var(--primary); opacity:1; }
+.hero { position:relative; height:500px; overflow:hidden; }
+.hero img { width:100%; height:100%; object-fit:cover; filter:brightness(0.6); }
+.hero-content { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white; }
+.hero-content h1 { font-size:3rem; margin-bottom:10px; font-weight:700; }
+.hero-content p { font-size:1.2rem; opacity:0.9; margin-bottom:20px; }
+section { padding:70px 80px; max-width:1100px; margin:auto; }
+.section-body { display:flex; flex-direction:column; align-items:center; gap:25px; }
+.section-body img { width:65%; border-radius:14px; object-fit:cover; }
+.section-body p { font-size:1.12rem; color:var(--subtext); text-align:justify; line-height:1.8; }
+#chatbot { position:fixed; bottom:20px; right:20px; background:var(--primary); color:white; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; font-size:22px; }
+#chat-window { display:none; position:fixed; bottom:90px; right:20px; width:320px; background:white; border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }</style></head>
 <body>
-
-<nav class="navbar">
-  <div class="brand">Greenville Community Hospital</div>
-  <div class="links"><a href='home.html'>Home</a> <a href='services.html'>Services</a> <a href='doctors.html'>Doctors</a> <a href='patients.html'>Patients</a></div>
-</nav>
-
+<nav class="navbar"><div class="brand">Mia&#39;s Trattoria</div><div class="links"><a href='home.html'>Home</a> <a href='menu.html'>Menu</a> <a href='reservations.html'>Reservations</a> <a href='contact-us.html'>Contact Us</a></div></nav>
 <section class="hero">
-  <img src='assets/images/home_hero.png' class='section-image'/>
-  <h1>Welcome to Greenville Community Hospital</h1>
-  <p>Your trusted destination.</p>
-  <button class="btn" onclick="document.getElementById('audio_site_intro').play()">🔊 Listen</button>
-  <audio id="audio_site_intro" src="assets/audio/site_intro.mp3"></audio>
+  <!-- IMAGE_PLACEHOLDER:home_hero -->
+  <div class="hero-content"><h1>Welcome to Mia&#39;s Trattoria</h1><p>Discover excellence, innovation, and care with us.</p></div>
 </section>
-
-<section>
-  <h2>Explore Sections</h2>
-  <div class="grid"><div class="card">
-            <h3>Home</h3>
-            <p>Learn more about Home.</p>
-            <a class="btn" href="home.html">View</a>
-        </div>
-<div class="card">
-            <h3>Services</h3>
-            <p>Learn more about Services.</p>
-            <a class="btn" href="services.html">View</a>
-        </div>
-<div class="card">
-            <h3>Doctors</h3>
-            <p>Learn more about Doctors.</p>
-            <a class="btn" href="doctors.html">View</a>
-        </div>
-<div class="card">
-            <h3>Patients</h3>
-            <p>Learn more about Patients.</p>
-            <a class="btn" href="patients.html">View</a>
-        </div></div>
-</section>
-
-<footer>© Greenville Community Hospital</footer>
-</body>
-</html>
+<section><h2 style="text-align:center;">Explore Our Sections</h2><div class="grid"><div class='card'><h3>Home</h3><p>Explore Home to learn more.</p><a class='btn' href='home.html'>View</a></div>
+<div class='card'><h3>Menu</h3><p>Explore Menu to learn more.</p><a class='btn' href='menu.html'>View</a></div>
+<div class='card'><h3>Reservations</h3><p>Explore Reservations to learn more.</p><a class='btn' href='reservations.html'>View</a></div>
+<div class='card'><h3>Contact Us</h3><p>Explore Contact Us to learn more.</p><a class='btn' href='contact-us.html'>View</a></div></div></section>
+<button id="chatbot">💬</button>
+<div id="chat-window"><h4>Ask Us Anything</h4><div id="chat-content"><p><b>How can I contact you?</b><br>You can reach us via the contact form or email for any inquiries.</p><p><b>What services are offered?</b><br>We provide tailored solutions based on your business needs.</p><p><b>Where are you located?</b><br>Our main office is located in the city center for easy accessibility.</p></div></div>
+<script>const chatBtn=document.getElementById('chatbot');const chatWin=document.getElementById('chat-window');chatBtn.addEventListener('click',()=>{chatWin.style.display=chatWin.style.display==='none'?'block':'none';});</script>
+<footer>© Mia&#39;s Trattoria</footer></body></html>

@@ -1,120 +1,30 @@
 <!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>About Us — St. Mary&#39;s Hospital - Compassionate Care for Our Community</title>
-  <link rel="stylesheet" href="assets/styles.css" />
-  <style>body {
-  margin: 0;
-  font-family: 'Inter', system-ui, Arial, sans-serif;
-  background: #FFFFFF;
-  color: #1C1F33;
-  line-height: 1.6;
+<html><head><meta charset="utf-8"><title>About Us — Bella Italia Ristorante</title><style>:root {
+  --primary: #0057FF;
+  --text: #1C1F33;
+  --subtext: #545C6B;
+  --border: #E6E8F0;
+  --bg-light: #F9FAFE;
 }
-
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 32px;
-  background: #ffffff;
-  border-bottom: 1px solid #E6E8F0;
-}
-.navbar .brand {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-.navbar .links a {
-  margin-left: 18px;
-  text-decoration: none;
-  color: #1C1F33;
-  font-weight: 500;
-}
-.navbar .links a:hover {
-  color: #4A63FF;
-}
-
-.hero img {
-  width: 100%;
-  height: 420px;
-  object-fit: cover;
-  border-radius: 16px;
-}
-
-.content-img {
-  width: 100%;
-  height: 340px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin-top: 16px;
-  border: 1px solid #E6E8F0;
-}
-
-.grid {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-.card {
-  background: #FFFFFF;
-  border: 1px solid #E6E8F0;
-  border-radius: 16px;
-  padding: 20px;
-  transition: 0.25s;
-}
-.card:hover {
-  transform: translateY(-4px);
-  background: #F7F9FF;
-  border-color: #D7DBF5;
-}
-
-.btn {
-  display: inline-block;
-  background: #4A63FF;
-  color: #FFFFFF;
-  padding: 10px 18px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-section { padding: 44px 32px; }
-
-footer {
-  padding: 24px;
-  text-align: center;
-  border-top: 1px solid #E6E8F0;
-  color: #555A6E;
-}</style>
-</head>
-<body>
-
-<nav class="navbar">
-  <a class="btn" href="index.html">← Home</a>
-  <div class="brand">About Us</div>
-</nav>
-
-<section>
-  <div class="section-body"><h3>Our Commitment to Your Health and Well-being</h3>
-
-<p>Welcome to St. Mary's Hospital, where our guiding principle is 'Compassionate Care for Our Community.' We believe that understanding the heart of our hospital – our mission, our values, and the dedicated people who work here – is key to building the trust essential in your healthcare journey. This section offers you a genuine introduction to who we are and why we are committed to serving you.</p>
-
-<p>For decades, St. Mary's Hospital has been a cornerstone of health in this region, growing alongside the community we serve. Our commitment extends beyond medical treatments; it encompasses a holistic approach to healing, ensuring every patient feels respected, understood, and cared for. You can trust that our team of experienced doctors, nurses, and support staff are not only highly skilled but also deeply empathetic, dedicated to providing the highest standards of medical excellence in a warm and welcoming environment.</p>
-
-<ul>
-  <li>Compassionate, patient-centered approach to every individual.</li>
-  <li>A team of highly skilled and dedicated medical professionals.</li>
-  <li>Modern facilities equipped with advanced healthcare technology.</li>
-  <li>A long-standing tradition of serving and caring for our community.</li>
-</ul></div>
-
-  <!-- IMAGE_PLACEHOLDER:about-us_img1 -->
-  <!-- IMAGE_PLACEHOLDER:about-us_img2 -->
-</section>
-
-<footer>
-  <p>© St. Mary&#39;s Hospital - Compassionate Care for Our Community</p>
-</footer>
-
-</body>
-</html>
+body { margin:0; font-family:'Inter',system-ui,Arial; background:white; color:var(--text); line-height:1.7; }
+.navbar { display:flex; justify-content:space-between; padding:22px 60px; border-bottom:1px solid var(--border); background:white; }
+.navbar .brand { font-size:1.4rem; font-weight:600; }
+.navbar .links a { margin-left:22px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
+.navbar .links a:hover { color:var(--primary); opacity:1; }
+.hero { position:relative; height:500px; overflow:hidden; }
+.hero img { width:100%; height:100%; object-fit:cover; filter:brightness(0.6); }
+.hero-content { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white; }
+.hero-content h1 { font-size:3rem; margin-bottom:10px; font-weight:700; }
+.hero-content p { font-size:1.2rem; opacity:0.9; margin-bottom:20px; }
+section { padding:70px 80px; max-width:1100px; margin:auto; }
+.section-body { display:flex; flex-direction:column; align-items:center; gap:25px; }
+.section-body img { width:65%; border-radius:14px; object-fit:cover; }
+.section-body p { font-size:1.12rem; color:var(--subtext); text-align:justify; line-height:1.8; }
+#chatbot { position:fixed; bottom:20px; right:20px; background:var(--primary); color:white; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; font-size:22px; }
+#chat-window { display:none; position:fixed; bottom:90px; right:20px; width:320px; background:white; border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }</style></head>
+<body><nav class="navbar"><a class="btn" href="index.html">← Back</a><div class="brand">About Us</div></nav>
+<section class="section-body">
+<p>The story of Bella Italia Ristorante is one deeply rooted in family, passion, and a lifelong love affair with the culinary traditions of Italy. Our journey began with the dream of bringing the authentic flavors and warm hospitality of our Italian heritage to our beloved community. Inspired by generations of family recipes, the bustling markets of Rome, and the serene vineyards of Tuscany, our founders envisioned a place where every guest could experience a genuine taste of Italy, where food is not just sustenance but an expression of love, culture, and togetherness. This dream bloomed into Bella Italia, a place we proudly call our home away from home.</p><!-- IMAGE_PLACEHOLDER:about-us_img1 -->
+<p>Our philosophy is simple yet profound: to honor the timeless art of Italian cooking while fostering an atmosphere of genuine warmth and welcoming hospitality. We believe that an exceptional meal extends beyond the plate; it encompasses the entire experience – the inviting ambiance, the attentive service, and the joyous conversations shared around the table. At Bella Italia, we are committed to upholding the integrity of traditional Italian cuisine, ensuring that each dish is prepared with authenticity, respect for ingredients, and an unwavering dedication to flavor that transports you directly to the heart of Italy with every visit.</p><!-- IMAGE_PLACEHOLDER:about-us_img2 -->
+<p>The soul of Bella Italia lies within our dedicated team, a passionate group of culinary artists and hospitality professionals who share a common vision. Our head chef, with years of experience honed in kitchens both in Italy and abroad, leads a talented brigade committed to culinary excellence and innovation, always respecting tradition. From our skilled pasta makers to our attentive waitstaff and knowledgeable sommeliers, every member of our team plays a crucial role in creating the seamless, delightful dining experience we are known for. Their commitment to service and genuine care ensures that every guest feels valued and cherished.</p><p>Central to our culinary ethos is an unyielding commitment to sourcing the finest, freshest ingredients available. We meticulously select produce from local farms, ensuring seasonal freshness and supporting our community. Beyond local bounty, we import key ingredients directly from Italy, such as our authentic San Marzano tomatoes, premium olive oils, and artisanal cheeses, to guarantee the unmistakable flavors that define true Italian cooking. This farm-to-table, and sometimes sea-to-table, approach allows us to craft dishes that are vibrant, flavorful, and deeply authentic, reflecting the rich agricultural heritage of Italy.</p><p>Bella Italia Ristorante is more than just a place to eat; it&#39;s a cherished gathering spot, a cornerstone of our community where friendships are forged and family milestones are celebrated. We deeply value the relationships we build with our patrons, many of whom have become like extended family. We strive to create an environment where everyone feels comfortable, whether they&#39;re enjoying a casual weeknight dinner or marking a special occasion. Our restaurant serves as a vibrant hub where people connect over delicious food and create lasting memories.</p>
+</section><footer>© Bella Italia Ristorante</footer></body></html>

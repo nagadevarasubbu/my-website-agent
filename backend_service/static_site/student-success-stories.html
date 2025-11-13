@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Student Success Stories — TechSkills Academy</title>
+<style>:root {
+  --primary: #8A5AFF;
+  --text: #1C1F33;
+  --subtext: #545C6B;
+  --border: #E6E8F0;
+  --bg-light: #F9FAFE;
+}
+
+body {
+  margin:0;
+  font-family:'Inter',system-ui,Arial;
+  line-height:1.7;
+  background:white;
+  color:var(--text);
+}
+
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 60px;
+  border-bottom:1px solid var(--border);
+  background:white;
+}
+.navbar .brand {
+  font-size:1.4rem;
+  font-weight:600;
+}
+.navbar .links a {
+  margin-left:22px;
+  text-decoration:none;
+  color:var(--text);
+  opacity:.85;
+  font-weight:500;
+}
+.navbar .links a:hover {
+  color:var(--primary);
+  opacity:1;
+}
+
+.hero {
+  position:relative;
+  height:500px;
+  overflow:hidden;
+}
+.hero img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:brightness(0.6);
+}
+.hero-content {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:white;
+  max-width:800px;
+}
+.hero-content h1 {
+  font-size:3rem;
+  margin-bottom:10px;
+  font-weight:700;
+}
+.hero-content p {
+  font-size:1.2rem;
+  opacity:0.9;
+  margin-bottom:20px;
+}
+.hero-content button {
+  background:var(--primary);
+  border:none;
+  padding:12px 24px;
+  color:white;
+  border-radius:8px;
+  font-weight:500;
+  cursor:pointer;
+}
+
+.grid {
+  display:grid;
+  gap:28px;
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+  justify-items:center;
+}
+.card {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:26px;
+  width:85%;
+  transition:.3s;
+  text-align:center;
+}
+.card:hover {
+  transform:translateY(-6px);
+  border-color:var(--primary);
+  background:var(--bg-light);
+}
+
+.btn {
+  background:var(--primary);
+  color:white;
+  padding:12px 20px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:500;
+  display:inline-block;
+}
+
+section {
+  padding:70px 80px;
+  max-width:1100px;
+  margin:auto;
+}
+.section-body {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:25px;
+}
+.section-body img {
+  width:65%;
+  display:block;
+  border-radius:14px;
+  object-fit:cover;
+}
+.section-body p {
+  font-size:1.12rem;
+  color:var(--subtext);
+  margin-bottom:12px;
+  text-align:justify;
+  line-height:1.8;
+}
+
+/* Chatbot Styles */
+#chatbot {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:50%;
+  width:55px;
+  height:55px;
+  cursor:pointer;
+  font-size:22px;
+}
+#chat-window {
+  display:none;
+  position:fixed;
+  bottom:90px;
+  right:20px;
+  width:320px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);
+  overflow:hidden;
+}
+#chat-window h4 {
+  background:var(--primary);
+  color:white;
+  padding:10px;
+  margin:0;
+  font-size:1rem;
+}
+#chat-content {
+  padding:10px;
+  max-height:250px;
+  overflow-y:auto;
+  font-size:0.95rem;
+}
+#chat-content p {
+  margin:8px 0;
+  color:var(--text);
+}</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="btn" href="index.html">← Back</a>
+  <div class="brand">Student Success Stories</div>
+</nav>
+
+<section class="section-body">
+  <p>Student Success Stories at TechSkills Academy</p>
+  <!-- IMAGE_PLACEHOLDER:student-success-stories_img1 -->
+  <p>Student Success Stories plays a key role at TechSkills Academy.
+As a education organization, we believe in quality, trust, and innovation.</p>
+  <!-- IMAGE_PLACEHOLDER:student-success-stories_img2 -->
+  <p>This section helps visitors understand our services and values clearly.
+Our goal is to make every interaction meaningful and transparent.</p>
+  <p>This section helps visitors understand our services and values clearly.
+Our goal is to make every interaction meaningful and transparent.</p>
+</section>
+
+<footer>© TechSkills Academy</footer>
+</body>
+</html>

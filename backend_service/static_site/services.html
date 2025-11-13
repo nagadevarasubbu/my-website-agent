@@ -1,42 +1,101 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Services — Greenville Community Hospital</title>
+<meta charset="utf-8">
+<title>Services — Sunshine General Hospital</title>
 <style>:root {
   --primary: #4A63FF;
-  --primary-hover: #4A63FF;
   --text: #1C1F33;
-  --subtext: #4A4F63;
+  --subtext: #545C6B;
   --border: #E6E8F0;
   --bg-light: #F7F9FF;
 }
 
-body { margin:0; font-family:'Inter',system-ui,Arial; line-height:1.7; color:var(--text); }
+body {
+    margin:0;
+    font-family:'Inter',system-ui,Arial;
+    line-height:1.7;
+    color: var(--text);
+}
 
-.navbar { display:flex; justify-content:space-between; align-items:center; padding:24px 60px; border-bottom:1px solid var(--border); background:white; }
-.navbar .brand { font-size:1.35rem; font-weight:600; }
-.navbar .links a { margin-left:24px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
-.navbar .links a:hover { opacity:1; color:var(--primary); }
+.container {
+    max-width:1100px;
+    margin:auto;
+    padding:0 24px;
+    text-align:center;
+}
 
-.hero { padding:80px 60px; background:linear-gradient(135deg, var(--bg-light), #ffffff); }
-.hero h1 { font-size:3rem; font-weight:700; margin-bottom:18px; }
-.hero p { font-size:1.2rem; color:var(--subtext); max-width:620px; }
+.navbar {
+    display:flex;
+    justify-content:space-between;
+    padding:22px 60px;
+    border-bottom:1px solid var(--border);
+    background:white;
+}
+.navbar .brand { font-size:1.4rem; font-weight:600; }
+.navbar .links a {
+    margin-left:22px; text-decoration:none; color:var(--text);
+    opacity:.85; font-weight:500;
+}
+.navbar .links a:hover { color:var(--primary); opacity:1; }
 
-.grid { display:grid; gap:32px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); padding-top:20px; }
-.card { background:white; border:1px solid var(--border); border-radius:18px; padding:28px; transition:0.3s; }
-.card:hover { transform:translateY(-6px); border-color:var(--primary); background:var(--bg-light); }
+.hero {
+    padding:80px 0;
+    background:linear-gradient(135deg, var(--bg-light), #FFF);
+}
+.hero h1 { font-size:3rem; margin-bottom:16px; }
+.hero p { color:var(--subtext); font-size:1.2rem; max-width:800px; margin:auto; }
 
-.btn { background:var(--primary); color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:500; }
-.btn:hover { background:var(--primary-hover); }
+.grid {
+    display:grid; gap:28px;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    padding-top:20px;
+}
 
-section { padding:60px 60px; }
-.section-body { max-width:900px; margin:auto; }
-.section-body h2 { font-size:2rem; margin-bottom:24px; }
-.section-body p { font-size:1.12rem; color:var(--subtext); margin-bottom:26px; }
-.section-body img { width:100%; border-radius:14px; margin:28px 0; object-fit:cover; }
+.card {
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:26px;
+    transition:.3s;
+}
+.card:hover {
+    transform:translateY(-6px);
+    border-color:var(--primary);
+    background:var(--bg-light);
+}
 
-footer { padding:30px; text-align:center; border-top:1px solid var(--border); color:var(--subtext); }</style>
+.btn {
+    background:var(--primary);
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:500;
+}
+
+footer {
+    padding:28px;
+    text-align:center;
+    border-top:1px solid var(--border);
+    color:var(--subtext);
+}
+
+/* Chatbot Bubble */
+#chatbot {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 280px; background: white; border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    padding: 14px; display: none; z-index:999;
+}
+#chat-button {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--primary); color:white;
+    padding: 14px 18px; border-radius: 50px;
+    cursor:pointer; z-index:1000;
+}
+.faq-item { margin-bottom: 10px; cursor:pointer; text-align:left; }
+.faq-answer { display:none; margin-top:6px; color:var(--subtext); }</style>
 </head>
 <body>
 
@@ -45,20 +104,15 @@ footer { padding:30px; text-align:center; border-top:1px solid var(--border); co
   <div class="brand">Services</div>
 </nav>
 
-<section class="section-body">
-  <h2>Services</h2>
-
-  <p>Services at Greenville Community Hospital</p>
+<section class="section-body container">
+  <p>Services at Sunshine General Hospital</p>
   <img src='assets/images/services_img1.png' class='section-image'/>
-
-  <p>Services plays an important role in what we do at Greenville Community Hospital.
-As a hospital organization, we focus on clarity, trust, and support.</p>
+  <p>Services plays a meaningful role at Sunshine General Hospital.
+As a hospital organization, we value compassion, trust, clarity, and support.</p>
   <img src='assets/images/services_img2.png' class='section-image'/>
-
-  <p>On this page, you will find helpful information and guidance.
-We are here to assist and provide a meaningful experience.</p>
+  <p>This page provides guidance and meaningful understanding for visitors.</p>
 </section>
 
-<footer>© Greenville Community Hospital</footer>
+<footer><div class="container">© Sunshine General Hospital</div></footer>
 </body>
 </html>

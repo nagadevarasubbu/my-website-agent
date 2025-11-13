@@ -1,120 +1,118 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Patient Information — Greenville Medical Center</title>
-  <link rel="stylesheet" href="assets/styles.css" />
-  <style>body {
-  margin: 0;
-  font-family: 'Inter', system-ui, Arial, sans-serif;
-  background: #FFFFFF;
-  color: #1C1F33;
-  line-height: 1.6;
+<meta charset="utf-8">
+<title>Patient Information — Greenwood Medical Center</title>
+<style>:root {
+  --primary: #4A63FF;
+  --text: #1C1F33;
+  --subtext: #545C6B;
+  --border: #E6E8F0;
+  --bg-light: #F7F9FF;
+}
+
+body {
+    margin:0;
+    font-family:'Inter',system-ui,Arial;
+    line-height:1.7;
+    color: var(--text);
+}
+
+.container {
+    max-width:1100px;
+    margin:auto;
+    padding:0 24px;
+    text-align:center;
 }
 
 .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 32px;
-  background: #ffffff;
-  border-bottom: 1px solid #E6E8F0;
+    display:flex;
+    justify-content:space-between;
+    padding:22px 60px;
+    border-bottom:1px solid var(--border);
+    background:white;
 }
-.navbar .brand {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
+.navbar .brand { font-size:1.4rem; font-weight:600; }
 .navbar .links a {
-  margin-left: 18px;
-  text-decoration: none;
-  color: #1C1F33;
-  font-weight: 500;
+    margin-left:22px; text-decoration:none; color:var(--text);
+    opacity:.85; font-weight:500;
 }
-.navbar .links a:hover {
-  color: #4A63FF;
-}
+.navbar .links a:hover { color:var(--primary); opacity:1; }
 
-.hero img {
-  width: 100%;
-  height: 420px;
-  object-fit: cover;
-  border-radius: 16px;
+.hero {
+    padding:80px 0;
+    background:linear-gradient(135deg, var(--bg-light), #FFF);
 }
-
-.content-img {
-  width: 100%;
-  height: 340px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin-top: 16px;
-  border: 1px solid #E6E8F0;
-}
+.hero h1 { font-size:3rem; margin-bottom:16px; }
+.hero p { color:var(--subtext); font-size:1.2rem; max-width:800px; margin:auto; }
 
 .grid {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    display:grid; gap:28px;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    padding-top:20px;
 }
+
 .card {
-  background: #FFFFFF;
-  border: 1px solid #E6E8F0;
-  border-radius: 16px;
-  padding: 20px;
-  transition: 0.25s;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:26px;
+    transition:.3s;
 }
 .card:hover {
-  transform: translateY(-4px);
-  background: #F7F9FF;
-  border-color: #D7DBF5;
+    transform:translateY(-6px);
+    border-color:var(--primary);
+    background:var(--bg-light);
 }
 
 .btn {
-  display: inline-block;
-  background: #4A63FF;
-  color: #FFFFFF;
-  padding: 10px 18px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
+    background:var(--primary);
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:500;
 }
 
-section { padding: 44px 32px; }
-
 footer {
-  padding: 24px;
-  text-align: center;
-  border-top: 1px solid #E6E8F0;
-  color: #555A6E;
-}</style>
+    padding:28px;
+    text-align:center;
+    border-top:1px solid var(--border);
+    color:var(--subtext);
+}
+
+/* Chatbot Bubble */
+#chatbot {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 280px; background: white; border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    padding: 14px; display: none; z-index:999;
+}
+#chat-button {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--primary); color:white;
+    padding: 14px 18px; border-radius: 50px;
+    cursor:pointer; z-index:1000;
+}
+.faq-item { margin-bottom: 10px; cursor:pointer; text-align:left; }
+.faq-answer { display:none; margin-top:6px; color:var(--subtext); }</style>
 </head>
 <body>
 
 <nav class="navbar">
-  <a class="btn" href="index.html">← Home</a>
+  <a class="btn" href="index.html">← Back</a>
   <div class="brand">Patient Information</div>
 </nav>
 
-<section>
-  <div class="section-body"><h3>Navigating Your Care Journey with Us</h3>
-
-<p>At Greenville Medical Center, we believe that well-informed patients are empowered patients. This "Patient Information" section is designed to be your central hub for everything you need to know before, during, and after your visit with us. Our goal is to make your experience as clear, comfortable, and stress-free as possible, ensuring you can focus on what matters most: your health and recovery.</p>
-
-<p>We understand that navigating healthcare can sometimes feel complex, and we are committed to simplifying that process for you. Here, you'll find reliable and easy-to-understand details covering important topics such as preparing for your appointment, understanding your rights, managing your billing, and accessing support services. Our team is dedicated to providing compassionate care, and we want to ensure you feel confident and supported every step of the way.</p>
-
-<ul>
-  <li>Convenient access to essential forms and documents.</li>
-  <li>Clear guidance for appointment preparation and what to bring.</li>
-  <li>Transparent information on billing, insurance, and financial assistance.</li>
-  <li>Resources for patient rights, privacy, and feedback.</li>
-</ul></div>
-
+<section class="section-body container">
+  <p>Patient Information at Greenwood Medical Center</p>
   <img src='assets/images/patient-information_img1.png' class='section-image'/>
-  <!-- IMAGE_PLACEHOLDER:patient-information_img2 -->
+  <p>Patient Information plays a meaningful role at Greenwood Medical Center.
+As a hospital organization, we value compassion, trust, clarity, and support.</p>
+  <img src='assets/images/patient-information_img2.png' class='section-image'/>
+  <p>This page provides guidance and meaningful understanding for visitors.</p>
 </section>
 
-<footer>
-  <p>© Greenville Medical Center</p>
-</footer>
-
+<footer><div class="container">© Greenwood Medical Center</div></footer>
 </body>
 </html>

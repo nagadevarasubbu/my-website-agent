@@ -1,64 +1,30 @@
 <!doctype html>
-<html>
-<head>
-<meta charset="utf-8" />
-<title>Home — Greenville Community Hospital</title>
-<style>:root {
-  --primary: #4A63FF;
-  --primary-hover: #4A63FF;
+<html><head><meta charset="utf-8"><title>Home — Mia&#39;s Trattoria</title><style>:root {
+  --primary: #0057FF;
   --text: #1C1F33;
-  --subtext: #4A4F63;
+  --subtext: #545C6B;
   --border: #E6E8F0;
-  --bg-light: #F7F9FF;
+  --bg-light: #F9FAFE;
 }
-
-body { margin:0; font-family:'Inter',system-ui,Arial; line-height:1.7; color:var(--text); }
-
-.navbar { display:flex; justify-content:space-between; align-items:center; padding:24px 60px; border-bottom:1px solid var(--border); background:white; }
-.navbar .brand { font-size:1.35rem; font-weight:600; }
-.navbar .links a { margin-left:24px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
-.navbar .links a:hover { opacity:1; color:var(--primary); }
-
-.hero { padding:80px 60px; background:linear-gradient(135deg, var(--bg-light), #ffffff); }
-.hero h1 { font-size:3rem; font-weight:700; margin-bottom:18px; }
-.hero p { font-size:1.2rem; color:var(--subtext); max-width:620px; }
-
-.grid { display:grid; gap:32px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); padding-top:20px; }
-.card { background:white; border:1px solid var(--border); border-radius:18px; padding:28px; transition:0.3s; }
-.card:hover { transform:translateY(-6px); border-color:var(--primary); background:var(--bg-light); }
-
-.btn { background:var(--primary); color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:500; }
-.btn:hover { background:var(--primary-hover); }
-
-section { padding:60px 60px; }
-.section-body { max-width:900px; margin:auto; }
-.section-body h2 { font-size:2rem; margin-bottom:24px; }
-.section-body p { font-size:1.12rem; color:var(--subtext); margin-bottom:26px; }
-.section-body img { width:100%; border-radius:14px; margin:28px 0; object-fit:cover; }
-
-footer { padding:30px; text-align:center; border-top:1px solid var(--border); color:var(--subtext); }</style>
-</head>
-<body>
-
-<nav class="navbar">
-  <a class="btn" href="index.html">← Back</a>
-  <div class="brand">Home</div>
-</nav>
-
+body { margin:0; font-family:'Inter',system-ui,Arial; background:white; color:var(--text); line-height:1.7; }
+.navbar { display:flex; justify-content:space-between; padding:22px 60px; border-bottom:1px solid var(--border); background:white; }
+.navbar .brand { font-size:1.4rem; font-weight:600; }
+.navbar .links a { margin-left:22px; text-decoration:none; color:var(--text); opacity:.85; font-weight:500; }
+.navbar .links a:hover { color:var(--primary); opacity:1; }
+.hero { position:relative; height:500px; overflow:hidden; }
+.hero img { width:100%; height:100%; object-fit:cover; filter:brightness(0.6); }
+.hero-content { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white; }
+.hero-content h1 { font-size:3rem; margin-bottom:10px; font-weight:700; }
+.hero-content p { font-size:1.2rem; opacity:0.9; margin-bottom:20px; }
+section { padding:70px 80px; max-width:1100px; margin:auto; }
+.section-body { display:flex; flex-direction:column; align-items:center; gap:25px; }
+.section-body img { width:65%; border-radius:14px; object-fit:cover; }
+.section-body p { font-size:1.12rem; color:var(--subtext); text-align:justify; line-height:1.8; }
+#chatbot { position:fixed; bottom:20px; right:20px; background:var(--primary); color:white; border:none; border-radius:50%; width:55px; height:55px; cursor:pointer; font-size:22px; }
+#chat-window { display:none; position:fixed; bottom:90px; right:20px; width:320px; background:white; border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }</style></head>
+<body><nav class="navbar"><a class="btn" href="index.html">← Back</a><div class="brand">Home</div></nav>
 <section class="section-body">
-  <h2>Home</h2>
-
-  <p>Home at Greenville Community Hospital</p>
-  <img src='assets/images/home_img1.png' class='section-image'/>
-
-  <p>Home plays an important role in what we do at Greenville Community Hospital.
-As a hospital organization, we focus on clarity, trust, and support.</p>
-  <img src='assets/images/home_img2.png' class='section-image'/>
-
-  <p>On this page, you will find helpful information and guidance.
-We are here to assist and provide a meaningful experience.</p>
-</section>
-
-<footer>© Greenville Community Hospital</footer>
-</body>
-</html>
+<p>Welcome to Mia&#39;s Trattoria, where every meal is a celebration of authentic Italian culinary heritage. Step into a world where the aroma of freshly baked bread, simmering tomato sauces, and robust espresso invites you to savour moments of pure delight. Our passion for traditional Italian fare, combined with a warm, inviting atmosphere, creates an unparalleled dining experience designed to transport you straight to the heart of Italy without ever leaving your seat. We believe that food is more than sustenance; it&#39;s a story, a memory, and an expression of love.</p><!-- IMAGE_PLACEHOLDER:home_img1 -->
+<p>At the core of Mia&#39;s Trattoria lies a deep respect for timeless family recipes, passed down through generations. Our chefs meticulously craft each dish, honouring the techniques and flavours that define true Italian cooking. From the rich, earthy notes of our Bolognese to the delicate, vibrant zest of our Limoncello dessert, every item on our menu is a testament to the simplicity and elegance inherent in Italy&#39;s diverse regional cuisines. We take pride in preserving these culinary traditions, sharing them with you, our cherished guests, and creating new memories around our tables.</p><!-- IMAGE_PLACEHOLDER:home_img2 -->
+<p>Our commitment to authenticity extends beyond recipes to the very ingredients we use. Mia&#39;s Trattoria is dedicated to sourcing the freshest, highest-quality produce, meats, and seafood, locally when possible, and importing specialty items directly from Italy to ensure an uncompromised taste. We believe that exceptional ingredients are the foundation of exceptional food, and this philosophy shines through in every bite. Experience the difference that premium olive oil, ripe tomatoes, fragrant basil, and artisanal cheeses make in elevating your dining journey with us.</p><p>Beyond the plate, Mia&#39;s Trattoria offers an ambiance of comfort and sophistication. Our thoughtfully designed dining space, with its soft lighting, rustic accents, and friendly chatter, provides the perfect backdrop for any occasion – be it a romantic dinner for two, a lively family gathering, or a celebratory meal with friends. We strive to create an atmosphere where you feel at home, enveloped in the warmth of genuine Italian hospitality, making every visit a memorable occasion filled with laughter and good company.</p><p>We invite you to embark on a culinary adventure with us, explore our diverse menu, and discover your new favourite Italian dishes. Whether you&#39;re craving a classic pasta, a crispy wood-fired pizza, or a delectable dessert, Mia&#39;s Trattoria promises a dining experience that delights the senses and nourishes the soul. We are more than just a restaurant; we are a vibrant community hub where good food, good wine, and good company come together in perfect harmony.</p>
+</section><footer>© Mia&#39;s Trattoria</footer></body></html>
